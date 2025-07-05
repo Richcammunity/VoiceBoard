@@ -1,0 +1,22 @@
+# Xcode
+.DS_Store
+/build/
+/Build/
+*.xcodeproj/xcuserdata/
+*.xcworkspace/shareddata/
+*.xccheckout
+
+# Swift Package Manager
+.build/
+Packages/
+*.xcodeproj/project.xcworkspace/
+
+# Generated files
+buildServer.json
+VoiceBoard.xcworkspace
+*.generated.swift
+DerivedData/
+
+# Local dependencies
+whisperkittools/
+WhisperKit/ 

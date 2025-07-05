@@ -6,14 +6,78 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		8436427B2E195EA700E96F25 /* VoiceBoardKeyboard.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 843642742E195EA700E96F25 /* VoiceBoardKeyboard.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		843642832E195F3100E96F25 /* WhisperKit in Frameworks */ = {isa = PBXBuildFile; productRef = 843642822E195F3100E96F25 /* WhisperKit */; };
+		843642852E195F3100E96F25 /* whisperkit-cli in Frameworks */ = {isa = PBXBuildFile; productRef = 843642842E195F3100E96F25 /* whisperkit-cli */; };
+		8436428E2E196ADE00E96F25 /* TextDecoder.mlmodelc in Resources */ = {isa = PBXBuildFile; fileRef = 8436428C2E196ADE00E96F25 /* TextDecoder.mlmodelc */; };
+		8436428F2E196ADE00E96F25 /* generation_config.json in Resources */ = {isa = PBXBuildFile; fileRef = 8436428A2E196ADE00E96F25 /* generation_config.json */; };
+		843642902E196ADE00E96F25 /* config.json in Resources */ = {isa = PBXBuildFile; fileRef = 843642892E196ADE00E96F25 /* config.json */; };
+		843642912E196ADE00E96F25 /* MelSpectrogram.mlmodelc in Resources */ = {isa = PBXBuildFile; fileRef = 8436428B2E196ADE00E96F25 /* MelSpectrogram.mlmodelc */; };
+		843642922E196ADE00E96F25 /* AudioEncoder.mlmodelc in Resources */ = {isa = PBXBuildFile; fileRef = 843642882E196ADE00E96F25 /* AudioEncoder.mlmodelc */; };
+		843642932E196ADE00E96F25 /* TextDecoder.mlmodelc in Resources */ = {isa = PBXBuildFile; fileRef = 8436428C2E196ADE00E96F25 /* TextDecoder.mlmodelc */; };
+		843642942E196ADE00E96F25 /* generation_config.json in Resources */ = {isa = PBXBuildFile; fileRef = 8436428A2E196ADE00E96F25 /* generation_config.json */; };
+		843642952E196ADE00E96F25 /* config.json in Resources */ = {isa = PBXBuildFile; fileRef = 843642892E196ADE00E96F25 /* config.json */; };
+		843642962E196ADE00E96F25 /* MelSpectrogram.mlmodelc in Resources */ = {isa = PBXBuildFile; fileRef = 8436428B2E196ADE00E96F25 /* MelSpectrogram.mlmodelc */; };
+		843642972E196ADE00E96F25 /* AudioEncoder.mlmodelc in Resources */ = {isa = PBXBuildFile; fileRef = 843642882E196ADE00E96F25 /* AudioEncoder.mlmodelc */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		843642792E195EA700E96F25 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8436425A2E195E5B00E96F25 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 843642732E195EA700E96F25;
+			remoteInfo = VoiceBoardKeyboard;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		843642802E195EA700E96F25 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				8436427B2E195EA700E96F25 /* VoiceBoardKeyboard.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		843642622E195E5B00E96F25 /* VoiceBoard.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VoiceBoard.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		843642742E195EA700E96F25 /* VoiceBoardKeyboard.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = VoiceBoardKeyboard.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		843642882E196ADE00E96F25 /* AudioEncoder.mlmodelc */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = AudioEncoder.mlmodelc; sourceTree = "<group>"; };
+		843642892E196ADE00E96F25 /* config.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = config.json; sourceTree = "<group>"; };
+		8436428A2E196ADE00E96F25 /* generation_config.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = generation_config.json; sourceTree = "<group>"; };
+		8436428B2E196ADE00E96F25 /* MelSpectrogram.mlmodelc */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = MelSpectrogram.mlmodelc; sourceTree = "<group>"; };
+		8436428C2E196ADE00E96F25 /* TextDecoder.mlmodelc */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = TextDecoder.mlmodelc; sourceTree = "<group>"; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		8436427C2E195EA700E96F25 /* Exceptions for "VoiceBoardKeyboard" folder in "VoiceBoardKeyboard" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 843642732E195EA700E96F25 /* VoiceBoardKeyboard */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		843642642E195E5B00E96F25 /* VoiceBoard */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = VoiceBoard;
+			sourceTree = "<group>";
+		};
+		843642752E195EA700E96F25 /* VoiceBoardKeyboard */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				8436427C2E195EA700E96F25 /* Exceptions for "VoiceBoardKeyboard" folder in "VoiceBoardKeyboard" target */,
+			);
+			path = VoiceBoardKeyboard;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -26,6 +90,15 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		843642712E195EA700E96F25 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				843642832E195F3100E96F25 /* WhisperKit in Frameworks */,
+				843642852E195F3100E96F25 /* whisperkit-cli in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -33,7 +106,9 @@
 			isa = PBXGroup;
 			children = (
 				843642642E195E5B00E96F25 /* VoiceBoard */,
+				843642752E195EA700E96F25 /* VoiceBoardKeyboard */,
 				843642632E195E5B00E96F25 /* Products */,
+				8436428D2E196ADE00E96F25 /* distil-whisper_distil-large-v3 */,
 			);
 			sourceTree = "<group>";
 		};
@@ -41,8 +116,21 @@
 			isa = PBXGroup;
 			children = (
 				843642622E195E5B00E96F25 /* VoiceBoard.app */,
+				843642742E195EA700E96F25 /* VoiceBoardKeyboard.appex */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		8436428D2E196ADE00E96F25 /* distil-whisper_distil-large-v3 */ = {
+			isa = PBXGroup;
+			children = (
+				843642882E196ADE00E96F25 /* AudioEncoder.mlmodelc */,
+				843642892E196ADE00E96F25 /* config.json */,
+				8436428A2E196ADE00E96F25 /* generation_config.json */,
+				8436428B2E196ADE00E96F25 /* MelSpectrogram.mlmodelc */,
+				8436428C2E196ADE00E96F25 /* TextDecoder.mlmodelc */,
+			);
+			path = "distil-whisper_distil-large-v3";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -55,10 +143,12 @@
 				8436425E2E195E5B00E96F25 /* Sources */,
 				8436425F2E195E5B00E96F25 /* Frameworks */,
 				843642602E195E5B00E96F25 /* Resources */,
+				843642802E195EA700E96F25 /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				8436427A2E195EA700E96F25 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				843642642E195E5B00E96F25 /* VoiceBoard */,
@@ -69,6 +159,30 @@
 			productName = VoiceBoard;
 			productReference = 843642622E195E5B00E96F25 /* VoiceBoard.app */;
 			productType = "com.apple.product-type.application";
+		};
+		843642732E195EA700E96F25 /* VoiceBoardKeyboard */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 8436427D2E195EA700E96F25 /* Build configuration list for PBXNativeTarget "VoiceBoardKeyboard" */;
+			buildPhases = (
+				843642702E195EA700E96F25 /* Sources */,
+				843642712E195EA700E96F25 /* Frameworks */,
+				843642722E195EA700E96F25 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				843642752E195EA700E96F25 /* VoiceBoardKeyboard */,
+			);
+			name = VoiceBoardKeyboard;
+			packageProductDependencies = (
+				843642822E195F3100E96F25 /* WhisperKit */,
+				843642842E195F3100E96F25 /* whisperkit-cli */,
+			);
+			productName = VoiceBoardKeyboard;
+			productReference = 843642742E195EA700E96F25 /* VoiceBoardKeyboard.appex */;
+			productType = "com.apple.product-type.app-extension";
 		};
 /* End PBXNativeTarget section */
 
@@ -83,6 +197,9 @@
 					843642612E195E5B00E96F25 = {
 						CreatedOnToolsVersion = 26.0;
 					};
+					843642732E195EA700E96F25 = {
+						CreatedOnToolsVersion = 26.0;
+					};
 				};
 			};
 			buildConfigurationList = 8436425D2E195E5B00E96F25 /* Build configuration list for PBXProject "VoiceBoard" */;
@@ -94,12 +211,16 @@
 			);
 			mainGroup = 843642592E195E5B00E96F25;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				843642812E195F3100E96F25 /* XCRemoteSwiftPackageReference "WhisperKit" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 843642632E195E5B00E96F25 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
 				843642612E195E5B00E96F25 /* VoiceBoard */,
+				843642732E195EA700E96F25 /* VoiceBoardKeyboard */,
 			);
 		};
 /* End PBXProject section */
@@ -109,6 +230,23 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				843642932E196ADE00E96F25 /* TextDecoder.mlmodelc in Resources */,
+				843642942E196ADE00E96F25 /* generation_config.json in Resources */,
+				843642952E196ADE00E96F25 /* config.json in Resources */,
+				843642962E196ADE00E96F25 /* MelSpectrogram.mlmodelc in Resources */,
+				843642972E196ADE00E96F25 /* AudioEncoder.mlmodelc in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		843642722E195EA700E96F25 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8436428E2E196ADE00E96F25 /* TextDecoder.mlmodelc in Resources */,
+				8436428F2E196ADE00E96F25 /* generation_config.json in Resources */,
+				843642902E196ADE00E96F25 /* config.json in Resources */,
+				843642912E196ADE00E96F25 /* MelSpectrogram.mlmodelc in Resources */,
+				843642922E196ADE00E96F25 /* AudioEncoder.mlmodelc in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -122,7 +260,22 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		843642702E195EA700E96F25 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		8436427A2E195EA700E96F25 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 843642732E195EA700E96F25 /* VoiceBoardKeyboard */;
+			targetProxy = 843642792E195EA700E96F25 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		8436426B2E195E5E00E96F25 /* Debug */ = {
@@ -308,6 +461,62 @@
 			};
 			name = Release;
 		};
+		8436427E2E195EA700E96F25 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 5B6FAS2XK6;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = VoiceBoardKeyboard/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = VoiceBoardKeyboard;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "VoiceBoard needs microphone access for dictation";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = Rich.VoiceBoard.VoiceBoardKeyboard;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		8436427F2E195EA700E96F25 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 5B6FAS2XK6;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = VoiceBoardKeyboard/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = VoiceBoardKeyboard;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "VoiceBoard needs microphone access for dictation";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = Rich.VoiceBoard.VoiceBoardKeyboard;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -329,7 +538,40 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
+		8436427D2E195EA700E96F25 /* Build configuration list for PBXNativeTarget "VoiceBoardKeyboard" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8436427E2E195EA700E96F25 /* Debug */,
+				8436427F2E195EA700E96F25 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		843642812E195F3100E96F25 /* XCRemoteSwiftPackageReference "WhisperKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/argmaxinc/WhisperKit.git";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		843642822E195F3100E96F25 /* WhisperKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 843642812E195F3100E96F25 /* XCRemoteSwiftPackageReference "WhisperKit" */;
+			productName = WhisperKit;
+		};
+		843642842E195F3100E96F25 /* whisperkit-cli */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 843642812E195F3100E96F25 /* XCRemoteSwiftPackageReference "WhisperKit" */;
+			productName = "whisperkit-cli";
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 8436425A2E195E5B00E96F25 /* Project object */;
 }
