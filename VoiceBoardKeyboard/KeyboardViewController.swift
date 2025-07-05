@@ -21,6 +21,7 @@ class KeyboardViewController: UIInputViewController {
     
     // Audio buffer management with thread safety
     private var audioBuffer: AVAudioPCMBuffer?
+    private var actualAudioFormat: AVAudioFormat?
     private let audioBufferQueue = DispatchQueue(label: "audio.buffer.queue", qos: .userInitiated)
     private let transcriptionQueue = DispatchQueue(label: "transcription.queue", qos: .userInitiated)
     
@@ -42,7 +43,7 @@ class KeyboardViewController: UIInputViewController {
     }
     
     // Audio processing constants
-    private let sampleRate: Double = 16000.0
+    private let targetSampleRate: Double = 16000.0  // Target sample rate for WhisperKit
     private let bufferSize: UInt32 = 1024
     private let maxBufferDuration: TimeInterval = 30.0 // Maximum buffer duration in seconds
 
@@ -50,27 +51,23 @@ class KeyboardViewController: UIInputViewController {
         super.viewDidLoad()
         setupUI()
         loadParakeetModel()
-        setupAudioBuffer()
     }
     
-    private func setupAudioBuffer() {
+    private func setupAudioBuffer(with inputFormat: AVAudioFormat) {
         audioBufferQueue.async { [weak self] in
             guard let self = self else { return }
             
-            // Calculate maximum frame capacity based on sample rate and duration
-            let maxFrameCapacity = AVAudioFrameCount(self.sampleRate * self.maxBufferDuration)
+            // Store the actual audio format for later use
+            self.actualAudioFormat = inputFormat
             
-            // Create audio buffer with proper format
-            guard let audioFormat = AVAudioFormat(commonFormat: .pcmFormatFloat32, 
-                                                sampleRate: self.sampleRate, 
-                                                channels: 1, 
-                                                interleaved: false) else {
-                print("Failed to create audio format")
-                return
-            }
+            // Calculate maximum frame capacity based on actual sample rate and duration
+            let maxFrameCapacity = AVAudioFrameCount(inputFormat.sampleRate * self.maxBufferDuration)
             
-            self.audioBuffer = AVAudioPCMBuffer(pcmFormat: audioFormat, frameCapacity: maxFrameCapacity)
+            // Create audio buffer with the actual input format
+            self.audioBuffer = AVAudioPCMBuffer(pcmFormat: inputFormat, frameCapacity: maxFrameCapacity)
             self.audioBuffer?.frameLength = 0
+            
+            print("Audio buffer initialized with format: \(inputFormat)")
         }
     }
 
@@ -155,6 +152,9 @@ class KeyboardViewController: UIInputViewController {
         let inputNode = audioEngine.inputNode
         let inputFormat = inputNode.outputFormat(forBus: 0)
 
+        // Setup audio buffer with the actual input format
+        setupAudioBuffer(with: inputFormat)
+
         let streamingTask = whisperKit.startStreamingRecognition { [weak self] results in
             guard let self = self else { return }
             if let text = results.compactMap({ $0.text }).joined(separator: " ").nilIfEmpty {
@@ -166,8 +166,13 @@ class KeyboardViewController: UIInputViewController {
         self.streamingTask = streamingTask
 
         // Install tap with thread-safe audio buffer management
-        inputNode.installTap(onBus: 0, bufferSize: bufferSize, format: inputFormat) { [weak self] buffer, _ in
-            self?.handleAudioBuffer(buffer)
+        // Wait briefly to ensure audio buffer is initialized
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
+            guard let self = self else { return }
+            
+            inputNode.installTap(onBus: 0, bufferSize: self.bufferSize, format: inputFormat) { [weak self] buffer, _ in
+                self?.handleAudioBuffer(buffer)
+            }
         }
 
         do {
@@ -210,8 +215,19 @@ class KeyboardViewController: UIInputViewController {
     
     private func accumulateAudioBuffer(_ buffer: AVAudioPCMBuffer, floatChannelData: UnsafePointer<UnsafeMutablePointer<Float>>) {
         guard let audioBuffer = self.audioBuffer,
-              let audioBufferChannelData = audioBuffer.floatChannelData else {
+              let audioBufferChannelData = audioBuffer.floatChannelData,
+              let actualFormat = self.actualAudioFormat else {
             print("Audio buffer not initialized")
+            return
+        }
+        
+        // Validate format compatibility
+        guard buffer.format.sampleRate == actualFormat.sampleRate,
+              buffer.format.channelCount == actualFormat.channelCount,
+              buffer.format.commonFormat == actualFormat.commonFormat else {
+            print("Format mismatch: incoming buffer format does not match expected format")
+            print("Expected: \(actualFormat)")
+            print("Incoming: \(buffer.format)")
             return
         }
         
@@ -223,9 +239,15 @@ class KeyboardViewController: UIInputViewController {
         let framesToCopy = min(incomingFrames, maxFrames - currentFrames)
         
         if framesToCopy > 0 {
-            // Safe memory copy operation
+            // Safe memory copy operation with bounds checking
             let sourcePointer = floatChannelData[0]
             let destinationPointer = audioBufferChannelData[0].advanced(by: Int(currentFrames))
+            
+            // Verify we have enough space in destination buffer
+            guard Int(currentFrames) + Int(framesToCopy) <= Int(maxFrames) else {
+                print("Buffer overflow prevented: not enough space in destination buffer")
+                return
+            }
             
             // Use safe memory copy instead of memcpy
             destinationPointer.assign(from: sourcePointer, count: Int(framesToCopy))
@@ -241,10 +263,12 @@ class KeyboardViewController: UIInputViewController {
     }
     
     private func shouldProcessBuffer() -> Bool {
-        guard let audioBuffer = self.audioBuffer else { return false }
+        guard let audioBuffer = self.audioBuffer,
+              let actualFormat = self.actualAudioFormat else { return false }
         
         // Process buffer when we have enough data (e.g., 1 second of audio)
-        let targetFrameCount = AVAudioFrameCount(sampleRate * 1.0) // 1 second
+        // Use the actual sample rate instead of the fixed target rate
+        let targetFrameCount = AVAudioFrameCount(actualFormat.sampleRate * 1.0) // 1 second
         return audioBuffer.frameLength >= targetFrameCount
     }
     
@@ -317,9 +341,11 @@ class KeyboardViewController: UIInputViewController {
         // Reset transcription state
         isTranscribing = false
         
-        // Reset audio buffer
+        // Reset audio buffer and format
         audioBufferQueue.async { [weak self] in
             self?.audioBuffer?.frameLength = 0
+            self?.audioBuffer = nil
+            self?.actualAudioFormat = nil
         }
 
         Task {
