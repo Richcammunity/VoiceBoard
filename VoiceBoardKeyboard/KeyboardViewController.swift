@@ -227,38 +227,84 @@ class KeyboardViewController: UIInputViewController {
                 try await AVAudioSession.sharedInstance().setCategory(.playAndRecord, mode: .measurement)
                 try await AVAudioSession.sharedInstance().setActive(true)
                 
-                // Start transcription with audio streaming
-                let audioStreamTranscriber = AudioStreamTranscriber(
-                    audioProcessor: AudioProcessor(),
-                    transcriber: whisperKit,
-                    decodingOptions: DecodingOptions(
-                        task: .transcribe,
-                        usePrefillPrompt: false,
-                        skipSpecialTokens: true,
-                        withoutTimestamps: true
-                    )
-                )
+                // Set up audio engine for recording
+                let audioEngine = AVAudioEngine()
+                self.audioEngine = audioEngine
                 
-                // Process audio stream
-                for try await transcription in audioStreamTranscriber.transcribe() {
-                    guard !Task.isCancelled else { break }
+                let inputNode = audioEngine.inputNode
+                let recordingFormat = inputNode.outputFormat(forBus: 0)
+                
+                // Create audio buffer for accumulating audio
+                var audioBuffer = AVAudioPCMBuffer(pcmFormat: recordingFormat, frameCapacity: AVAudioFrameCount(recordingFormat.sampleRate * 5))! // 5 seconds buffer
+                audioBuffer.frameLength = 0
+                
+                // Install tap to capture audio
+                inputNode.installTap(onBus: 0, bufferSize: 1024, format: recordingFormat) { [weak self] buffer, time in
+                    guard let self = self, self.isTranscribing else { return }
                     
-                    await MainActor.run {
-                        if let text = transcription.text, !text.isEmpty {
-                            self.transcribedTextView.text = text
-                            
-                            // Enable insert button when we have text
-                            if let insertButton = self.view.viewWithTag(100) as? UIButton {
-                                insertButton.isEnabled = true
-                            }
+                    // Accumulate audio in buffer
+                    let framesToCopy = min(buffer.frameLength, audioBuffer.frameCapacity - audioBuffer.frameLength)
+                    if framesToCopy > 0 {
+                        memcpy(audioBuffer.floatChannelData![0].advanced(by: Int(audioBuffer.frameLength)), 
+                               buffer.floatChannelData![0], 
+                               Int(framesToCopy) * MemoryLayout<Float>.size)
+                        audioBuffer.frameLength += framesToCopy
+                    }
+                    
+                    // Process when we have enough audio (every 3 seconds)
+                    if audioBuffer.frameLength >= AVAudioFrameCount(recordingFormat.sampleRate * 3) {
+                        Task {
+                            await self.processAudioBuffer(audioBuffer, whisperKit: whisperKit)
                         }
+                        audioBuffer.frameLength = 0 // Reset buffer
                     }
                 }
+                
+                // Start the audio engine
+                try audioEngine.start()
+                
+                // Keep the task alive while transcribing
+                while isTranscribing && !Task.isCancelled {
+                    try await Task.sleep(nanoseconds: 100_000_000) // 0.1 second
+                }
+                
             } catch {
                 await MainActor.run {
                     self.statusLabel.text = "Error: \(error.localizedDescription)"
                     self.stopLiveDictation()
                 }
+            }
+        }
+    }
+    
+    private func processAudioBuffer(_ audioBuffer: AVAudioPCMBuffer, whisperKit: WhisperKit) async {
+        do {
+            // Convert audio buffer to the format expected by WhisperKit
+            let audioArray = Array(UnsafeBufferPointer(start: audioBuffer.floatChannelData![0], count: Int(audioBuffer.frameLength)))
+            
+            // Transcribe the audio
+            let result = try await whisperKit.transcribe(audioArray: audioArray)
+            
+            await MainActor.run {
+                if let segments = result?.segments, !segments.isEmpty {
+                    let text = segments.compactMap { $0.text }.joined(separator: " ").trimmingCharacters(in: .whitespacesAndNewlines)
+                    
+                    if !text.isEmpty {
+                        // Append new text to existing text
+                        let existingText = self.transcribedTextView.text ?? ""
+                        let newText = existingText.isEmpty ? text : existingText + " " + text
+                        self.transcribedTextView.text = newText
+                        
+                        // Enable insert button when we have text
+                        if let insertButton = self.view.viewWithTag(100) as? UIButton {
+                            insertButton.isEnabled = true
+                        }
+                    }
+                }
+            }
+        } catch {
+            await MainActor.run {
+                self.statusLabel.text = "Transcription error: \(error.localizedDescription)"
             }
         }
     }
@@ -269,6 +315,11 @@ class KeyboardViewController: UIInputViewController {
         // Cancel transcription task
         transcriptionTask?.cancel()
         transcriptionTask = nil
+        
+        // Stop audio engine
+        audioEngine?.inputNode.removeTap(onBus: 0)
+        audioEngine?.stop()
+        audioEngine = nil
         
         // Stop audio session
         Task {
