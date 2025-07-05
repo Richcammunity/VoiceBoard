@@ -245,8 +245,15 @@ class KeyboardViewController: UIInputViewController {
                     // Accumulate audio in buffer
                     let framesToCopy = min(buffer.frameLength, audioBuffer.frameCapacity - audioBuffer.frameLength)
                     if framesToCopy > 0 {
-                        memcpy(audioBuffer.floatChannelData![0].advanced(by: Int(audioBuffer.frameLength)), 
-                               buffer.floatChannelData![0], 
+                        // Safely check for float channel data before processing
+                        guard let audioBufferChannelData = audioBuffer.floatChannelData?[0],
+                              let bufferChannelData = buffer.floatChannelData?[0] else {
+                            print("Warning: Audio buffer channel data is nil or format is not float")
+                            return
+                        }
+                        
+                        memcpy(audioBufferChannelData.advanced(by: Int(audioBuffer.frameLength)), 
+                               bufferChannelData, 
                                Int(framesToCopy) * MemoryLayout<Float>.size)
                         audioBuffer.frameLength += framesToCopy
                     }
@@ -280,7 +287,12 @@ class KeyboardViewController: UIInputViewController {
     private func processAudioBuffer(_ audioBuffer: AVAudioPCMBuffer, whisperKit: WhisperKit) async {
         do {
             // Convert audio buffer to the format expected by WhisperKit
-            let audioArray = Array(UnsafeBufferPointer(start: audioBuffer.floatChannelData![0], count: Int(audioBuffer.frameLength)))
+            guard let channelData = audioBuffer.floatChannelData?[0] else {
+                print("Warning: Audio buffer channel data is nil or format is not float")
+                return
+            }
+            
+            let audioArray = Array(UnsafeBufferPointer(start: channelData, count: Int(audioBuffer.frameLength)))
             
             // Transcribe the audio
             let result = try await whisperKit.transcribe(audioArray: audioArray)
