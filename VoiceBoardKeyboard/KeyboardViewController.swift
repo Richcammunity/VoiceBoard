@@ -14,7 +14,17 @@ class KeyboardViewController: UIInputViewController {
     private var whisperKit: WhisperKit?
     private var audioEngine: AVAudioEngine?
     private var transcriptionTask: Task<Void, Never>?
-    private var isTranscribing = false
+    private var _isTranscribing = false
+    private let transcribingQueue = DispatchQueue(label: "transcribing.queue", attributes: .concurrent)
+    
+    private var isTranscribing: Bool {
+        get {
+            transcribingQueue.sync { _isTranscribing }
+        }
+        set {
+            transcribingQueue.async(flags: .barrier) { self._isTranscribing = newValue }
+        }
+    }
 
     private let dictateButton = UIButton(type: .system)
     private let statusLabel = UILabel()
@@ -235,7 +245,13 @@ class KeyboardViewController: UIInputViewController {
                 let recordingFormat = inputNode.outputFormat(forBus: 0)
                 
                 // Create audio buffer for accumulating audio
-                var audioBuffer = AVAudioPCMBuffer(pcmFormat: recordingFormat, frameCapacity: AVAudioFrameCount(recordingFormat.sampleRate * 5))! // 5 seconds buffer
+                guard let audioBuffer = AVAudioPCMBuffer(pcmFormat: recordingFormat, frameCapacity: AVAudioFrameCount(recordingFormat.sampleRate * 5)) else {
+                    await MainActor.run {
+                        self.statusLabel.text = "Failed to create audio buffer"
+                        self.stopLiveDictation()
+                    }
+                    return
+                }
                 audioBuffer.frameLength = 0
                 
                 // Install tap to capture audio
