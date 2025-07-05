@@ -21,9 +21,17 @@ struct ContentView: View {
                 }
                 
                 Section(header: Text("Why Full Access?")) {
-                    Text("VoiceBoard requires Full Access to download speech recognition models for offline use. Your voice data is processed entirely on your iPhone and is never sent to any servers.")
+                    Text("VoiceBoard requires Full Access to access the microphone for dictation and to use the Whisper model for offline speech recognition. Your voice data is processed entirely on your iPhone and is never sent to any servers.")
                         .font(.footnote)
                         .foregroundColor(.secondary)
+                }
+                
+                Section(header: Text("Using VoiceBoard")) {
+                    InstructionStep(step: 1, text: "Open any app with a text field (Messages, Notes, etc.)")
+                    InstructionStep(step: 2, text: "Tap in the text field to bring up the keyboard")
+                    InstructionStep(step: 3, text: "Tap the globe icon (🌐) to switch to VoiceBoard")
+                    InstructionStep(step: 4, text: "Tap the microphone button (🎤) to start dictating")
+                    InstructionStep(step: 5, text: "Speak clearly, then tap 'Insert Text' to add your dictation")
                 }
             }
             .navigationTitle("Welcome to VoiceBoard")
